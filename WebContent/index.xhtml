@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3c.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:f="http://java.sun.com/jsf/core">
+<h:head>
+<title>CRUD PRODUCTO</title>
+</h:head>
+<h:body>
+<h:form>
+	<p:commandButton value="Agregar producto" icon="ui-icon-check" actionListener="#{controllerProducto.limpiarProducto()}"
+	oncomplete="PF('dialogoAgregar').show();" update=":formAgregar"/>
+</h:form>
+
+<h:form id="formListado">
+	<p:dataTable id="tablaProductos" paginator="true" paginatorPosition="bottom" rows="10" var="producto" 
+	value="#{controllerProducto.listaProducto}" emptyMessage="No existen Producto">
+	<p:column headerText="ID">
+		<h:outputText value="#{producto.id}" />
+	</p:column>
+	<p:column headerText="NOMBRE">
+		<h:outputText value="#{producto.name}" />
+	</p:column>
+	<p:column headerText="TELEFONO">
+		<h:outputText value="#{producto.precio}" />
+	</p:column>
+	<p:column headerText="MODIFICAR" style="text-align:center" exportable="false">
+		<p:commandButton icon="ui-icon-pencil" title="Modificar Producto" oncomplete="PF('dialogoModificar').show();" update=":formModificar">
+			<f:setPropertyActionListener value="#{producto}" target="#{controllerProducto.producto}" />
+		</p:commandButton>
+	</p:column>
+	<p:column headerText="ELIMINAR" style="text-align:center" exportable="false">
+		<p:commandButton icon="ui-icon-trash" title="Eliminar Producto" oncomplete="PF('dialogoEliminar').show();" update=":formEliminar">
+			<f:setPropertyActionListener value="#{producto}" target="#{controllerProducto.producto}" />
+		</p:commandButton>
+	</p:column>
+	</p:dataTable>
+	<p:separator>
+	<!-- REPORTES: XML, CSV, PDF -->
+		<p:panel header="REPORTES DE PERSONAS">
+			<!-- xmlbeans-2.5	0.jar -->
+			<p:commandButton value="EXPORT AS XML" ajax="false">
+				<p:dataExporter type="xml" target="tablaProductos" fileName="reportePersonasXML"/>
+			</p:commandButton>	
+			<!-- poi-3.10-FINAL.jar -->
+			<p:commandButton value="EXPORT AS CSV" ajax="false">
+				<p:dataExporter type="csv" target="tablaProductos" fileName="reportePersonasCSV"/>
+			</p:commandButton>
+			<!-- itext-2.1.7.jar -->
+			<p:commandButton value="EXPORT AS PDF" ajax="false">
+				<p:dataExporter type="pdf" target="tablaProductos" fileName="reportePersonasPDF"/>
+			</p:commandButton>	
+		</p:panel>
+	</p:separator>
+	
+	
+</h:form>
+
+<h:form id="formAgregar">
+	<p:dialog id="dlgAgregar" header="Agregar Producto" widgetVar="dialogoAgregar" resizable="false" showEffect="fade" hideEffect="explode"
+	modal="true">
+		<p:panelGrid columns="2" style="margin: 0 auto;">
+			<p:outputLabel value="Nombre"/>
+			<p:inputText value="#{controllerProducto.producto.name}"/>
+			<p:outputLabel value="Precio"/>
+			<p:inputText value="#{controllerProducto.producto.precio}"/>
+		</p:panelGrid>
+		<p:commandButton value="Guardar datos" actionListener="#{controllerProducto.agregarProducto()}" update=":formListado:tablaProductos"
+		oncomplete="PF('dialogoAgregar').hide();"/>
+		<p:commandButton value="Cancelar" onclick="PF('dialogoAgregar').hide();"/>
+	</p:dialog>
+</h:form>
+
+<h:form id="formModificar">
+	<p:dialog id="dlgModificar" header="Modificar Producto" widgetVar="dialogoModificar" resizable="false" showEffect="fade" hideEffect="explode"
+	modal="true">
+		<p:panelGrid columns="2" style="margin: 0 auto;">
+			<p:outputLabel value="Nombre"/>
+			<p:inputText value="#{controllerProducto.producto.name}"/>
+			<p:outputLabel value="Precio"/>
+			<p:inputText value="#{controllerProducto.producto.precio}"/>
+		</p:panelGrid>
+		<p:commandButton value="Modificar datos" actionListener="#{controllerProducto.modificarProducto()}" update=":formListado:tablaProductos"
+		oncomplete="PF('dialogoModificar').hide();"/>
+		<p:commandButton value="Cancelar" onclick="PF('dialogoModificar').hide();"/>
+	</p:dialog>
+</h:form>
+
+<h:form id="formEliminar">
+	<p:dialog id="dlgEliminar" header="Modificar Producto" widgetVar="dialogoEliminar" resizable="false" showEffect="fade" hideEffect="explode"
+	modal="true">
+			<p:outputLabel value="Desea eliminar registro?"/>
+			<p:commandButton value="Si" actionListener="#{controllerProducto.eliminarProducto()}" update=":formListado:tablaProductos"
+			oncomplete="PF('dialogoEliminar').hide();"/>
+			<p:commandButton value="No" onclick="PF('dialogoEliminar').hide();"/>
+	</p:dialog>
+</h:form>
+</h:body>
+</html>
